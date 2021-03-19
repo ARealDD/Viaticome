@@ -1,471 +1,480 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/responsive.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>度假屋，民宿，租房-Viaticome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/responsive.css">
 </head>
-<body>
-  <!-- main wrapper -->
-  <div class="wrapper">
+<style>
+    input[type=date]::-webkit-inner-spin-button { visibility: hidden; }
+    input[type=date]::-webkit-datetime-edit { padding: 1px; background: url(../selection.gif); }
+    input[type=date]::-webkit-datetime-edit-fields-wrapper { background-color: white; }
+    input[type=date]::-webkit-datetime-edit-text { color: forestgreen; padding: 0 .3em; }
+    input[type=date]::-webkit-datetime-edit-year-field {color: forestgreen;}
+    input[type=date]::-webkit-datetime-edit-month-field {color: forestgreen;}
+    input[type=date]::-webkit-datetime-edit-day-field {color: forestgreen;}
+    input[type=date]::-webkit-calendar-picker-indicator {
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        box-shadow: inset 0 1px #fff, 0 1px #eee;
+        background-color: #eee;
+        background-image: url(../static/images/icons/calendar-default.png);
+        color: transparent;
+    }
+    input[type=date]::-webkit-clear-button {}
+
+    input[type=month]::-webkit-inner-spin-button { visibility: hidden; }
+    input[type=month]::-webkit-datetime-edit { padding: 1px; background: url(../selection.gif); }
+    input[type=month]::-webkit-datetime-edit-fields-wrapper { background-color: white; }
+    input[type=month]::-webkit-datetime-edit-text { color: forestgreen; padding: 0; }
+    input[type=month]::-webkit-datetime-edit-year-field {color: forestgreen;}
+    input[type=month]::-webkit-datetime-edit-month-field {color: forestgreen;}
+    input[type=month]::-webkit-datetime-edit-day-field {color: forestgreen;}
+    input[type=month]::-webkit-calendar-picker-indicator {
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        box-shadow: inset 0 1px #fff, 0 1px #eee;
+        background-color: #eee;
+        background-image: url(../static/images/icons/calendar-default.png);
+        color: transparent;
+    }
+    input[type=month]::-webkit-clear-button {}
+</style>
+<body {{bar_show}}>
+<!--  登录和注册的弹窗-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="position:absolute; margin-top: 20%; left: 50%; width: 900px; height: 550px; margin-left: -450px;">
+            <div class="cont">
+                <div class="form sign-in">
+                    <form class="form-planner form-horizontal" method="post" action="" name="signinform">
+                        {% csrf_token %}
+                        <div class="row" style="margin-top: 10%;">
+                            <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="邮箱" name="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="密码" name="password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 0%;">
+                            <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                                <input class="btn btn-default" style="width: 100%;" value="登录" id="signinbutton">
+                            </div>
+                        </div>
+                        <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+                        <script>
+                            $(document).ready(function () {
+                                $("#signinbutton").click(function () {
+                                    var curusername = document.signinform.email.value;
+                                    var curpassword = document.signinform.password.value;
+                                    $.get("/api/login", {
+                                            'username': curusername,
+                                            'password': curpassword
+                                        },
+                                        function (ret) {
+                                            if (ret == "ok") {
+                                                window.location.href = "/login_success?username=" + curusername + "&&password=" + curpassword;
+                                            } else {
+                                                document.getElementById("signinalert").style.display = "block";
+                                                document.getElementById("signinalert").innerHTML = ret;
+                                            }
+                                        }
+                                    );
+                                });
+                            });
+                        </script>
+                    </form>
+                    <div class="alert alert-danger" id="signinalert" style="margin-top: 5%; display: none;">
+                    </div>
+                </div>
+                <div class="sub-cont">
+                    <div class="img">
+                        <div class="img__text m--up">
+                            <h2>第一次访问？</h2>
+                        </div>
+                        <div class="img__text m--in">
+                            <h2>已经是成员了？</h2>
+                        </div>
+                        <div class="img__btn">
+                            <span class="m--up">注册</span>
+                            <span class="m--in">登录</span>
+                        </div>
+                    </div>
+                    <div class="form sign-up">
+                        <form class="form-planner form-horizontal" method="post" action="" name="signupform">
+                            {% csrf_token %}
+                            <div class="row" style="margin-top: 10%;">
+                                <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="邮箱" name="regemail">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" placeholder="密码" name="regpassword">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 0%;">
+                                <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                                    <input class="btn btn-default" style="width: 100%;" value="注册" id="signupbutton">
+                                </div>
+                            </div>
+                            <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+                            <script>
+                                $(document).ready(function () {
+                                    $("#signupbutton").click(function () {
+                                        var curusername = document.signupform.regemail.value;
+                                        var curpassword = document.signupform.regpassword.value;
+                                        $.get("/api/register", {
+                                                'username': curusername,
+                                                'password': curpassword
+                                            },
+                                            function (ret) {
+                                                if (ret == "ok") {
+                                                    window.location.href = "/register_success?username=" + curusername + "&&password=" + curpassword;
+                                                } else {
+                                                    document.getElementById("signupalert").style.display = "block";
+                                                    document.getElementById("signupalert").innerHTML = ret;
+                                                }
+                                            }
+                                        );
+                                    });
+                                });
+                            </script>
+                        </form>
+                        <div class="alert alert-danger" id="signupalert" style="margin-top: 5%; display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--</div>-->
+            <script src="../static/js/index.js"></script>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- main wrapper -->
+<div class="wrapper">
     <!-- header -->
     <header class="header">
-      <div class="header-top">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
-              <div class="header-location"><i class="fa fa-home"></i> <a href="#">455 Martinson, Los Angeles</a></div>
-              <div class="header-email"><i class="fa fa-envelope-o"></i> <a href="mailto:support@email.com">support@email.com</a></div>
-              <div class="header-phone"><i class="fa fa-phone"></i> <a href="#">8 (043) 567 - 89 - 30</a></div>
+        <div class="header-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+                        <div class="header-location"><i class="fa fa-home"></i> <a href="#">北京五道口</a></div>
+                        <div class="header-email"><i class="fa fa-envelope-o"></i> <a href="mailto:956xxq@email.com">956xxq@email.com</a>
+                        </div>
+                        <div class="header-phone"><i class="fa fa-phone"></i> <a href="#">8 (043) 567 - 89 - 30</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        <div class="nav navbar-nav navbar-right">
+                            {% if login %}
+                            <li><a href="#">欢迎您：{{ username }}</a></li>
+                            <li><a href="logout">登出</a></li>
+                            {% else %}
+                            <li><a href="#" data-toggle="modal" data-target="#myModal">注册/登录</a></li>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-              <div class="header-social pull-right">
-                <a href="#"><i class="fa fa-twitter"></i></a>
-                <a href="#"><i class="fa fa-facebook"></i></a>
-                <a href="#"><i class="fa fa-google-plus"></i></a>
-                <a href="#"><i class="fa fa-dribbble"></i></a>
-                <a href="#"><i class="fa fa-instagram"></i></a>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-      <div class="header-bottom">
-        <nav class="navbar navbar-universal navbar-custom">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-3">
-                <div class="logo"><a href="index.html" class="navbar-brand page-scroll"><img src="assets/images/logo/logo.png" alt="logo"></a></div>
-              </div>
-              <div class="col-lg-9">
-                <div class="navbar-header">
-                  <button type="button" data-toggle="collapse" data-target=".navbar-main-collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+        <div class="header-bottom">
+            <nav class="navbar navbar-universal navbar-custom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="logo"><a href="../templates/index.html" class="navbar-brand page-scroll"><img
+                                    src="../static/images/logo/logo.png" alt="logo"></a></div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="navbar-header">
+                                <button type="button" data-toggle="collapse" data-target=".navbar-main-collapse"
+                                        class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span
+                                        class="icon-bar"></span><span class="icon-bar"></span><span
+                                        class="icon-bar"></span></button>
+                            </div>
+                            <div class="collapse navbar-collapse navbar-main-collapse">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li><a href="../templates/index.html">主页</a></li>
+                                    <li><a href="../templates/short-term.html">房间一览</a></li>
+                                    <li><a href="../templates/user-info.html">个人空间</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="collapse navbar-collapse navbar-main-collapse">
-                  <ul class="nav navbar-nav navbar-right">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="contacts.html">Contacts</a></li>
-                    <li><a href="best-rooms.html">All Rooms</a></li>
-                    <li><a href="best-rooms-detail.html">Room Detail</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </div>
+            </nav>
+        </div>
     </header>
     <!-- /header -->
     <!-- parallax -->
-      <section class="bg-parallax parallax-window">
-        <div class="overlay"></div>
+    <section class="bg-parallax parallax-window">
         <div class="container">
-          <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-              <div class="parallax-text">
-                <h2 class="parallax_t __white">New Grand Hotel 5*</h2>
-                <h2 class="parallax_t __green">available from 10.12.2017</h2>
-                <p>Offices parties lasting outward nothing age few resolve. Impression to discretion understood to we interested he excellence. Him remarkably use projection collecting going about eat forty world.</p>
-              </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="parallax-text">
+                        <h2 class="parallax_t __white">Viaticome</h2>
+                        <h2 class="parallax_t __green">available from 2019.08.24</h2>
+                        <p>一家人享受团圆佳节吧！</p>
+                    </div>
+                </div>
+                <!-- planner-->
+                <!--            入住和退房的placeholder做成当天和明天-->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 planner">
+                    <a name="login_bar"></a>
+                    <div class="planner-block">
+                        <form class="form-planner form-horizontal" method="post" action="submit">
+                            {%csrf_token%}
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>入住日期</label>
+                                        <input class="form-control __plannerInput" id="datetimepicker1" type="date"
+                                               placeholder="24_08_2019">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>退房日期</label>
+                                        <input class="form-control __plannerInput" id="datetimepicker2" type="date"
+                                               placeholder="25_08_2019">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                    <div class="form-group">
+                                        <label>房间类型</label>
+                                        <div class="theme-select">
+                                            <select class="form-control __plannerSelect">
+                                                <option value="">标准</option>
+                                                <option value="">经济</option>
+                                                <option value="">豪华</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                                    <div class="form-group">
+                                        <label>人数</label>
+                                        <div class="theme-select">
+                                            <select class="form-control __plannerSelect">
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                                <option value="">3</option>
+                                                <option value="">4</option>
+                                                <option value="">5</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label>价格区间</label>
+                                            <div id="slider-range"></div>
+                                            <div id="amount"><span id="amount1"></span><span id="amount2"></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="planner-check-availability">
+                                            <a href="wizzard-step1.html" class="btn btn-default">搜索房源</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /planner-->
             </div>
-            <!-- planner-->
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 planner">
-              <div class="planner-block">
-                <form class="form-planner form-horizontal">
-                  <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                      <div class="form-group">
-                        <label>Check in</label>
-                        <input class="form-control __plannerInput" id="datetimepicker1" type="text" placeholder="10-05-2015">
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                      <div class="form-group">
-                        <label>Check out</label>
-                        <input class="form-control __plannerInput" id="datetimepicker2" type="text" placeholder="17-05-2015">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                      <div class="form-group">
-                          <label>Room type</label>
-                          <div class="theme-select">
-                            <select class="form-control __plannerSelect">
-                              <option value="">Select a room</option>
-                            </select>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                      <div class="form-group">
-                          <label>Adults</label>
-                          <div class="theme-select">
-                            <select class="form-control __plannerSelect">
-                              <option value="">1</option>
-                              <option value="">2</option>
-                              <option value="">3</option>
-                              <option value="">4</option>
-                              <option value="">5</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                      <div class="form-group">
-                          <label>Kids</label>
-                          <div class="theme-select">
-                            <select class="form-control __plannerSelect">
-                              <option value="">1</option>
-                              <option value="">2</option>
-                              <option value="">3</option>
-                              <option value="">4</option>
-                              <option value="">5</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                      <div class="form-group">
-                          <label>Enter your email</label>
-                          <input type="email" class="form-control" placeholder="E-mail">
-                        </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                      <div class="form-group">
-                          <label>Price range</label>
-                          <div id="slider-range"></div>
-                          <div id="amount"><span id="amount1"></span><span id="amount2"></span></div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                      <div class="planner-check-availability">
-                        <a href="wizzard-step1.html" class="btn btn-default">Check availability</a>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <!-- /planner-->
-          </div>
         </div>
     </section>
     <!-- /parallax -->
-    <!-- chose best rooms -->
+    <!-- for short term -->
     <section class="best-room">
-      <div class="container">
-        <div class="title-main">
-          <h2 class="h2">Best Offer For Weekend<span class="title-secondary">Look Our Featured Rooms</span></h2>
-        </div>
-        <div class="best-room-carousel">
-          <ul class="row best-room_ul">
-            <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
-              <div class="best-room_img">
-                <a href="#"><img src="assets/images/best-rooms/1.jpg" alt=""></a>
-                <div class="best-room_overlay">
-                  <div class="overlay_icn"><a href="best-rooms-detail.html"></a></div>
-                </div>
-              </div>
-              <div class="best-room-info">
-                <div class="best-room_t"><a href="best-rooms-detail.html">Grand Super Luxury</a></div>
-                <div class="best-room_desc">Difficulty on insensible reasonable in. From as went he they. Preference themselves me as thoroughly partiality considered.
-                </div>
-                <div class="best-room_price">
-                  <span>$99</span> / two days
-                </div>
-              </div>
-            </li>
-            <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
-              <div class="best-room_img">
-                <a href="#"><img src="assets/images/best-rooms/2.jpg" alt=""></a>
-                <div class="best-room_overlay">
-                  <div class="overlay_icn"><a href="best-rooms-detail.html"></a></div>
-                </div>
-              </div>
-              <div class="best-room-info">
-                <div class="best-room_t"><a href="best-rooms-detail.html">Special Spa Room</a></div>
-                <div class="best-room_desc">Difficulty on insensible reasonable in. From as went he they. Preference themselves me as thoroughly partiality considered.
-                </div>
-                <div class="best-room_price">
-                  <span>$129</span> / two days
-                </div>
-              </div>
-            </li>
-            <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
-              <div class="best-room_img">
-                <a href="#"><img src="assets/images/best-rooms/3.jpg" alt=""></a>
-                <div class="best-room_overlay">
-                  <div class="overlay_icn"><a href="best-rooms-detail.html"></a></div>
-                </div>
-              </div>
-              <div class="best-room-info">
-                <div class="best-room_t"><a href="best-rooms-detail.html">President Double Luxury</a></div>
-                <div class="best-room_desc">Difficulty on insensible reasonable in. From as went he they. Preference themselves me as thoroughly partiality considered.
-                </div>
-                <div class="best-room_price">
-                  <span>$349</span> / two days
-                </div>
-              </div>
-            </li>
-            <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
-              <div class="best-room_img">
-                <a href="#"><img src="assets/images/best-rooms/4.jpg" alt=""></a>
-                <div class="best-room_overlay">
-                  <div class="overlay_icn"><a href="best-rooms-detail.html"></a></div>
-                </div>
-              </div>
-              <div class="best-room-info">
-                <div class="best-room_t"><a href="best-rooms-detail.html">Grand Super Luxury</a></div>
-                <div class="best-room_desc">Difficulty on insensible reasonable in. From as went he they. Preference themselves me as thoroughly partiality considered.
-                </div>
-                <div class="best-room_price">
-                  <span>$49</span> / two days
-                </div>
-              </div>
-            </li>
-            <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
-              <div class="best-room_img">
-                <a href="#"><img src="assets/images/best-rooms/5.jpg" alt=""></a>
-                <div class="best-room_overlay">
-                  <div class="overlay_icn"><a href="best-rooms-detail.html"></a></div>
-                </div>
-              </div>
-              <div class="best-room-info">
-                <div class="best-room_t"><a href="best-rooms-detail.html">Special Spa Room</a></div>
-                <div class="best-room_desc">Difficulty on insensible reasonable in. From as went he they. Preference themselves me as thoroughly partiality considered.
-                </div>
-                <div class="best-room_price">
-                  <span>$199</span> / two days
-                </div>
-              </div>
-            </li>
-            <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
-              <div class="best-room_img">
-                <a href="#"><img src="assets/images/best-rooms/6.jpg" alt=""></a>
-                <div class="best-room_overlay">
-                  <div class="overlay_icn"><a href="best-rooms-detail.html"></a></div>
-                </div>
-              </div>
-              <div class="best-room-info">
-                <div class="best-room_t"><a href="best-rooms-detail.html">President Double Luxury</a></div>
-                <div class="best-room_desc">Difficulty on insensible reasonable in. From as went he they. Preference themselves me as thoroughly partiality considered.
-                </div>
-                <div class="best-room_price">
-                  <span>$209</span> / two days
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- /choose best rooms -->
-    <!-- lux banner parallax -->
-      <section class="banner bg-parallax2">
-        <div class="overlay"></div>
-      <div class="banner-parallax">
         <div class="container">
-          <div class="text-center">
-            <div class="banner-parallax_raiting">
-              <a href="#"><span class="star __selected"></span></a>
-              <a href="#"><span class="star __selected"></span></a>
-              <a href="#"><span class="star __selected"></span></a>
-              <a href="#"><span class="star"></span></a>
-              <a href="#"><span class="star"></span></a>
+            <div class="title-main">
+                <h2 class="h2">精选房源<span class="title-secondary">旅游出行，周末度假，为您精选</span></h2>
             </div>
-            <h2 class="banner-parallax_t">Double Luxury Room</h2>
-            <div class="banner-parallax_price"><span>$560</span> / Night (Only This Week)</div>
-            <a href="#" class="btn btn-default">Book this room</a>
-          </div>
+            <div class="best-room-carousel">
+                <ul class="row best-room_ul">
+                    <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
+                        <div class="best-room_img">
+                            <a href="#"><img src="{{short_house_img1}}" alt=""></a>
+                            <div class="best-room_overlay">
+                                <div class="overlay_icn"><a href="{{short_house_href1}}"></a></div>
+                            </div>
+                        </div>
+                        <div class="best-room-info">
+                            <div class="best-room_t"><a href="{{short_house_href1}}">{{ short_house_name1 }}</a></div>
+                            <div class="best-room_desc">{{ short_house_description1 }}
+                            </div>
+                            <div class="best-room_price">
+                                <span>￥{{ short_house_price1 }}</span> 每晚
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
+                        <div class="best-room_img">
+                            <a href="#"><img src="{{short_house_img2}}" alt=""></a>
+                            <div class="best-room_overlay">
+                                <div class="overlay_icn"><a href="{{short_house_href2}}"></a></div>
+                            </div>
+                        </div>
+                        <div class="best-room-info">
+                            <div class="best-room_t"><a href="{{short_house_href2}}">{{ short_house_name2 }}</a></div>
+                            <div class="best-room_desc">{{ short_house_description2 }}
+                            </div>
+                            <div class="best-room_price">
+                                <span>￥{{ short_house_price2 }}</span> 每晚
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
+                        <div class="best-room_img">
+                            <a href="#"><img src="{{short_house_img3}}" alt=""></a>
+                            <div class="best-room_overlay">
+                                <div class="overlay_icn"><a href="{{short_house_href3}}"></a></div>
+                            </div>
+                        </div>
+                        <div class="best-room-info">
+                            <div class="best-room_t"><a href="{{short_house_href3}}">{{ short_house_name3 }}</a></div>
+                            <div class="best-room_desc">{{ short_house_description3 }}
+                            </div>
+                            <div class="best-room_price">
+                                <span>￥{{ short_house_price3 }}</span> 每晚
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
         </div>
-      </div>
+    </section>
+    <!-- for short term -->
+
+
+    <!-- lux banner parallax -->
+    <section class="banner bg-parallax2">
+        <div class="overlay"></div>
+        <div class="banner-parallax">
+            <div class="container">
+                <div class="text-center">
+                    <div class="banner-parallax_raiting">
+                        <a href="#"><span class="star"></span></a>
+                        <a href="#"><span class="star"></span></a>
+                        <a href="#"><span class="star"></span></a>
+                        <a href="#"><span class="star"></span></a>
+                        <a href="#"><span class="star"></span></a>
+                    </div>
+                    <h2 class="banner-parallax_t">{{ shown_room }}</h2>
+                    <div class="banner-parallax_price"><span>￥{{ shown_room_price }}</span> 每晚（仅限本周）</div>
+                    <a href="{{shown_room_detail.html}}" class="btn btn-default">现在预订</a>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- /lux banner parallax -->
-    <!-- enjoy our services -->
-    <section class="section">
-      <div class="container">
-        <div class="title-main"><h2 class="h2">Our Services<span class="title-secondary">Great. Safe. Free.</span></h2></div>
-        <div class="row">
-          <div class="col-lg-4 col-md-4 col-sm-6">
-            <h3 class="service_title"><i class="fa fa-globe"></i> Different Tours</h3>
-            <p>Improve ashamed married expense bed her comfort pursuit mrs. Four time took ye your as fail lady.</p>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-6">
-            <h3 class="service_title"><i class="fa fa-taxi"></i> Taxi Service</h3>
-            <p>Improve ashamed married expense bed her comfort pursuit mrs. Four time took ye your as fail lady.</p>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-6">
-            <h3 class="service_title"><i class="fa fa-glass"></i> Bar Included</h3>
-            <p>Improve ashamed married expense bed her comfort pursuit mrs. Four time took ye your as fail lady.</p>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-6">
-            <h3 class="service_title"><i class="fa fa-life-ring"></i> Discount System</h3>
-            <p>Improve ashamed married expense bed her comfort pursuit mrs. Four time took ye your as fail lady.</p>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-6">
-            <h3 class="service_title"><i class="fa fa-leaf"></i> Professional Staff</h3>
-            <p>Improve ashamed married expense bed her comfort pursuit mrs. Four time took ye your as fail lady.</p>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-6">
-            <h3 class="service_title"><i class="fa fa-eye"></i> Parking 24/7</h3>
-            <p>Improve ashamed married expense bed her comfort pursuit mrs. Four time took ye your as fail lady.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /enjoy our services -->
-    <!-- testiomonials -->
-    <section class="testimonials">
-      <div class="container">
-        <div class="title-main"><h2 class="h2">Some Testimonails<span class="title-secondary">People Says About Us</span></h2></div>
-        <div class="owl-carousel">
-          <div class="item">
-            <div class="testimonials-block_i">
-              <div class="testimonials-block_t">Great <span>Service</span></div>
-              <p>Old unsatiable our now but considered travelling impression. In excuse hardly summer in basket misery. By rent an part need. At wrong of of water those linen. Needed oppose seemed how all</p>
-            </div>
-            <div class="testimonials-block_user">
-                <div class="user_img"><img src="assets/images/testimonials/mike.jpg" alt=""></div>
-                <div class="user_n">Garry Carlson</div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="testimonials-block_i">
-              <div class="testimonials-block_t">Thank You Very Much <span>I Am Happy!</span></div>
-              <p>Certainty listening no no behaviour existence assurance situation is. Because add why not esteems amiable him. Interested the unaffected mrs law friendship add principles.</p>
-            </div>
-            <div class="testimonials-block_user">
-                <div class="user_img"><img src="assets/images/testimonials/mila.png" alt=""></div>
-                <div class="user_n">Mila Markovna</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /testiomonials -->
-    <!-- map -->
-    <section class="map">
-      <div id="map"></div>
-    </section>
-    <!-- /map -->
-  <!-- /main wrapper -->
-  <!-- footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <div class="footer-top_logo"><a href="index.html"><img src="assets/images/logo/logo.png" alt="Footer logo"></a></div>
-            <div class="footer-top_txt">
-              <p>Continual delighted as elsewhere am convinced unfeeling. Introduced stimulated attachment no by projection. To lady whom my mile sold four need introduced.</p>
-            </div>
-            <div class="footer-top_address">
-                <div><i class="fa fa-phone"></i> Phone: <span>8 (043) 567 - 89 - 30</span></div>
-                <div><i class="fa fa-envelope-o"></i> E-mail: <span><a href="mailto:support@email.com">support@email.com</a></span></div>
-                <div><i class="fa fa-home"></i> Location: <span>455 Martinson, Los Angeles</span></div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <div class="footer-top_rooms">
-              <ul>
-                <li>
-                  <div class="rooms_img">
-                    <a href="blog-detail.html"><img src="assets/images/footer/1.jpg" alt=""></a>
-                  </div>
-                  <div class="rooms_info">
-                    <div class="rooms_t"><a href="blog-detail.html">Grang Super Luxury</a></div>
-                    <div class="rooms_props">3 Bed  /  Wi-Fi  /  2 - Bathroom<span>$119</span></div>
-                  </div>
-                </li>
-                <li>
-                  <div class="rooms_img">
-                    <a href="blog-detail.html"><img src="assets/images/footer/2.jpg" alt=""></a>
-                  </div>
-                  <div class="rooms_info">
-                    <div class="rooms_t"><a href="blog-detail.html">President Room</a></div>
-                    <div class="rooms_props">4 Bed  /  Wi-Fi  /  3 - Bathroom<span>$329</span></div>
-                  </div>
-                </li>
-                <li>
-                  <div class="rooms_img">
-                    <a href="blog-detail.html"><img src="assets/images/footer/3.jpg" alt=""></a>
-                  </div>
-                  <div class="rooms_info">
-                    <div class="rooms_t"><a href="blog-detail.html">Spa Double Room</a></div>
-                    <div class="rooms_props">2 Bed  /  Wi-Fi  /  2 - Bathroom<span>$749</span></div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-12 marg-sm-50 col-xs-12">
-            <div class="footer-top_contact_form">
-              <div class="contact_form_t">Contact Form</div>
-                  <form action="mail.php" method="POST" class="row form-horizontal form-wizzard">
+
+
+    <!-- /main wrapper -->
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" name="name" class="form-control" placeholder="Name ...">
+                        <div class="footer-top_logo"><a href="{{index.html}}"><img src="../static/images/logo/logo.png"
+                                                                                   alt="Footer logo"></a></div>
+                        <div class="footer-top_txt">
+                            <p>度假屋，民宿，长期租房，Viaticome为您精心挑选。</p>
+                            <p>为所有房东和房客建立一个具有包容性的平台是我们最大的目标，我们一直在努力做得更好。</p>
+                        </div>
+                        <div class="footer-top_address">
+                            <div><i class="fa fa-phone"></i> Phone: <span>8 (043) 567 - 89 - 30</span></div>
+                            <div><i class="fa fa-envelope-o"></i> E-mail: <span><a href="mailto:support@email.com">support@email.com</a></span>
+                            </div>
+                            <div><i class="fa fa-home"></i> Location: <span>455 Martinson, Los Angeles</span></div>
+                        </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <input type="email" name="email" class="form-control" placeholder="Email ...">
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 marg-sm-50 col-xs-12">
+                        <div class="footer-top_contact_form">
+                            <div class="contact_form_t">有任何意见与建议，请联系我们：</div>
+                            <form action="submit" method="POST" class="row form-horizontal form-wizzard">
+                                {%csrf_token%}
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" name="name" class="form-control" placeholder="您的姓/名">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <input type="email" name="email" class="form-control" placeholder="您的邮箱">
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <textarea rows="6" name="message" class="form-control"
+                                              placeholder="您的意见与建议"></textarea>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                                    <input type="submit" value="Send message" class="btn btn-default">
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                      <textarea rows="6" name="message" class="form-control" placeholder="Message ..."></textarea>
-                    </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
-                      <input type="submit" value="Send message" class="btn btn-default">
-                    </div>
-                  </form>
                 </div>
             </div>
-          </div>
         </div>
-      </div>
-    <div class="footer-bottom">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div class="footer-bottom_copy">Copyright &copy; 2017.Company name All rights reserved.</div>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div class="footer-bottom_links">
-              <a class="active" href="index.html">Home</a>
-              <a href="gallery.html">Gallery</a>
-              <a href="blog.html">Blog</a>
-              <a href="wizzard-step1.html">Reservation</a>
-              <a href="#">Purchase</a>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="footer-bottom_copy">Copyright &copy; 2019.Company name All rights reserved.</div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="footer-bottom_links">
+                            <a class="active" href="{{index.html}}">Home</a>
+                            <a href="shortterm">Rooms</a>
+                            <a href="aboutus">About us</a>
+                            <a href="contacts">Contacts</a>
+                            <a href="#">Purchase</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </footer>
+    </footer>
 </div>
-  <!-- /footer -->
-  <!-- Scripts -->
-  <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-  <script type="text/javascript" src="assets/js/tether.min.js"></script>
-  <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
-  <script type="text/javascript" src="assets/js/moment.min.js"></script>
-  <script type="text/javascript" src="assets/js/jquery.smartmenus.js"></script>
-  <script type="text/javascript" src="assets/js/jquery.parallax.min.js"></script>
-  <script type="text/javascript" src="assets/js/jquery.shuffle.min.js"></script>
-  <script type="text/javascript" src="assets/js/owl.carousel.min.js"></script>
-  <!---<script type="text/javascript" src="http://ditu.google.cn/maps/api/js"></script>--->
-  <script type="text/javascript" src="assets/js/map.js"></script>
-  <script type="text/javascript" src="assets/js/main.js"></script>
-  <!-- /Scripts -->
+<!-- /footer -->
+<!-- Scripts -->
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/tether.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../static/js/moment.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery.smartmenus.js"></script>
+<script type="text/javascript" src="../static/js/jquery.parallax.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery.shuffle.min.js"></script>
+<script type="text/javascript" src="../static/js/owl.carousel.min.js"></script>
+<!---<script type="text/javascript" src="http://ditu.google.cn/maps/api/js"></script>--->
+<script type="text/javascript" src="../static/js/map.js"></script>
+<script type="text/javascript" src="../static/js/main.js"></script>
+<!-- /Scripts -->
 </body>
 </html>

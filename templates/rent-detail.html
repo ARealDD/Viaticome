@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<!-- Scripts -->
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/tether.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../static/js/moment.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery.smartmenus.js"></script>
+<script type="text/javascript" src="../static/js/jquery.parallax.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery.shuffle.min.js"></script>
+<script type="text/javascript" src="../static/js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="../static/js/main.js"></script>
+<!-- /Scripts -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>订单详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/responsive.css">
+</head>
+<body>
+
+<!-- 续租 -->
+<div class="modal fade" id="xzsqModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    续租申请
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-planner form-horizontal" method="post" action="">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-3 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                            <div class="form-group">
+                                续租
+                                <input type="text" class="form-control" required id="extendmonth" value="0"
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+                                个月
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 5%; margin-bottom: 8%;">
+                        <div class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                            <button id="submitextend" class="btn btn-default" style="width: 100%;">提交</button>
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                $("#submitextend").click(function () {
+                                    var current = document.getElementById("currentid");
+                                    var curextendmonth = document.getElementById("extendmonth");
+                                    $.get("", {'rent_id': current, 'extend_month': curextendmonth});                 //发送的数据为要续租的订单id和续租月数。需要补全请求的url
+                                    window.location.reload();
+                                });
+                            });
+                        </script>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 取消 -->
+<div class="modal fade" id="qxddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    取消订单
+                </h4>
+            </div>
+            <div class="modal-body row">
+                <label style="font-size: 30px; color: red; text-align: center; width: 100%; margin-bottom: 10%; margin-top: 10%;">订单取消后不可恢复</label>
+                <button id="confirmcancelbutton" class="col-lg-4 offset-lg-4 offset-md-4 col-md-4 btn-default"
+                        style="margin-bottom: 10%;">确认
+                </button>
+                <script>
+                    $(document).ready(function () {
+                        $("#confirmcancelbutton").click(function () {
+                            var current = document.getElementById("currentid");
+                            $.get("", {'rent_id': current});                         //发送的数据为要删除的订单id。需要补全请求的url
+                            window.location.href = "user-info.html";
+                        });
+                    });
+                </script>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 续租 -->
+<div class="modal fade" id="tsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    报修/投诉
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-planner form-horizontal" method="post" action="">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        种类：
+                        <select>
+                            <option name="repair">报修</option>
+                            <option name="complain">投诉</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        详细内容：
+                        <br>
+                        <textarea rows="5" style="width: 100%;" name="reporttext"></textarea>
+                    </div>
+                    <input type="file" name="myfile">
+                    <div class="row" style="margin-top: 5%; margin-bottom: 8%;">
+                        <div class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-6 offset-md-3 col-xs-6 offset-xs-3">
+                            <input type="submit" class="btn btn-default" style="width: 100%;" value="提交">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- main wrapper -->
+<div class="wrapper">
+    <!-- header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+                        <div class="header-location"><i class="fa fa-home"></i> <a href="#">北京五道口</a></div>
+                        <div class="header-email"><i class="fa fa-envelope-o"></i> <a href="mailto:956xxq@email.com">956xxq@email.com</a>
+                        </div>
+                        <div class="header-phone"><i class="fa fa-phone"></i> <a href="#">8 (043) 567 - 89 - 30</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        <div class="nav navbar-nav navbar-right">
+                            {% if login %}
+                            <li><a href="#">欢迎您：{{ user_name }}</a></li>
+                            <li><a href="/logout/">登出</a></li>
+                            {% else %}
+                            <li><a href="#" data-toggle="modal" data-target="#myModal">注册/登录</a></li>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <nav class="navbar navbar-universal navbar-custom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="logo"><a href="index.html" class="navbar-brand page-scroll"><img
+                                    src="../static/images/logo/logo.png" alt="logo"></a></div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="navbar-header">
+                                <button type="button" data-toggle="collapse" data-target=".navbar-main-collapse"
+                                        class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span
+                                        class="icon-bar"></span><span class="icon-bar"></span><span
+                                        class="icon-bar"></span></button>
+                            </div>
+                            <div class="collapse navbar-collapse navbar-main-collapse">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li><a href="index.html">主页</a></li>
+                                    <li><a href="#">房间一览</a></li>
+                                    <li><a href="#">个人空间</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- /header -->
+    <!-- breadcrumbs -->
+    <section class="breadcrumbs" style="background-image: url(../static/images/breadcrumbs/best-room.jpg)">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class="h1">订单详情</h1>
+                </div>
+                <div class="col-md-6">
+                    <ol class="breadcrumb">
+                        <li><a href="#">个人空间</a><i class="fa fa-angle-right"></i></li>
+                        <li class="active">订单详情</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /breadcrumbs -->
+    <!-- room details-->
+    <section class="room-detail" style="height:700px; padding-top: 10px; background-color: rgb(255,255,243)">
+        <!--                <div style="width: 1536px; height: 600px; position: absolute; background-color: rgb(236,236,226); margin-top: 120px;"></div>-->
+        <!--                <div style="left: 0px; width: 952px; height: 600px; position: absolute; margin-top: 120px; z-index: 990; background-image: url(../static/images/best-rooms/1.jpg); background-size: 100% 100%;"></div>-->
+        <div class="col-lg-12 marg50"><h2 class="h2"></h2></div>
+        <!-- 此处是一个gallery，展示当前房间的细节图片-->
+        <div class="col-lg-6 col-md-6 col-sm-6"
+             style="height: 80%; background-image: url(../static/images/best-rooms/1.jpg); background-size:cover;"></div>
+        <div class="col-lg-6 col-md-6 col-sm-6"
+             style="height: 80%; padding-top: 3%; padding-left: 5%; padding-right: 5%; background-color: rgb(236,236,226);">
+            <table class="simple" style="font-size: 18px; font-family: '微软雅黑 Light'; height: 75%;">
+                <tr>
+                    <td width="8%"><img src="../static/icons/rent_id.png" width="100%"></td>
+                    <td width="15%"><strong>订单ID:</strong></td>
+                    <td width="27%" id="currentid">{{rent_id}}</td>
+                    <td width="8%"><img src="../static/icons/room_number.png" width="100%"></td>
+                    <td width="15%"><strong>房间号:</strong></td>
+                    <td width="27%">{{room_number}}</td>
+                </tr>
+                <tr>
+                    <td><img src="../static/icons/bed.png" width="100%"></td>
+                    <td><strong>床铺数量:</strong></td>
+                    <td>{{bed_count}}</td>
+                    <td><img src="../static/icons/rent_type.png" width="100%"></td>
+                    <td><strong>租房类型:</strong></td>
+                    <td>{{rent_type}}</td>
+                </tr>
+                <tr>
+                    <td><img src="../static/icons/date.png" width="100%"></td>
+                    <td><strong>入住时间:</strong></td>
+                    <td>{{rent_date}}</td>
+                    <td><img src="../static/icons/keep.png" width="100%"></td>
+                    <td><strong>租房时长:</strong></td>
+                    <td>{{rent_keep}}</td>
+                </tr>
+                <tr>
+                    <td><img src="../static/icons/verify_state.png" width="100%"></td>
+                    <td><strong>审核状态:</strong></td>
+                    <td>{{verify_state}}</td>
+                    <td><img src="../static/icons/pay_state.png" width="100%"></td>
+                    {% if rent_is_long %}
+                    <td><strong>合同状态:</strong></td>
+                    <td>{{contract_state}}</td>
+                    {% else %}
+                    <td><strong>支付状态:</strong></td>
+                    <td>{{pay_state}}</td>
+                    {% endif %}
+                </tr>
+            </table>
+            <br>
+            {% if rent_is_payed %}
+            <a href="#" data-toggle="modal" data-target="#tsModal" class="btn btn-default"
+               style="float: right; margin-right: 5%;">报修/投诉</a>
+
+            {% if rent_is_long %}
+            <a href="#" data-toggle="modal" data-target="#xzsqModal" class="btn btn-default"
+               style="float: right; margin-right: 5%;">续租申请</a>
+            {% endif %}
+
+            {% elif not rent_is_rejected %}
+            <a href="#" data-toggle="modal" data-target="#qxddModal" class="btn btn-default"
+               style="float: right; margin-right: 5%;">取消订单</a>
+
+            {% if rent_is_long %}
+            <a href="contract.html" class="btn btn-default" style="float: right; margin-right: 5%;">导出合同</a>
+            {% else %}
+            <a href="pay.html" class="btn btn-default" style="float: right; margin-right: 5%;">支付房租</a>
+            {% endif %}
+
+            {% endif %}
+        </div>
+
+    </section>
+    <!-- /room details -->
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-top" style="padding-top: 30px; padding-bottom: 30px;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="footer-top_logo"><a href="index.html"><img src="../static/images/logo/logo.png"
+                                                                               alt="Footer logo"></a></div>
+                        <div class="footer-top_txt">
+                            <p>度假屋，民宿，长期租房，Viaticome为您精心挑选。</p>
+                            <p>为所有房东和房客建立一个具有包容性的平台是我们最大的目标，我们一直在努力做得更好。</p>
+                        </div>
+                        <div class="footer-top_address">
+                            <div><i class="fa fa-phone"></i> Phone: <span>8 (043) 567 - 89 - 30</span><br>
+                                <i class="fa fa-envelope-o"></i> E-mail: <span><a href="mailto:support@email.com">956xxq@email.com</a></span><br>
+                                <i class="fa fa-home"></i> Location: <span>北京五道口</span></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 marg-sm-50 col-xs-12">
+                        <div class="footer-top_contact_form">
+                            <div class="contact_form_t">有任何意见与建议，请联系我们：</div>
+                            <form action="submit" method="POST" class="row form-horizontal form-wizzard">
+                                {%csrf_token%}
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" name="name" class="form-control" placeholder="您的姓/名">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <input type="email" name="email" class="form-control" placeholder="您的邮箱">
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <textarea rows="2" name="message" class="form-control"
+                                              placeholder="您的意见与建议"></textarea>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                                    <input type="submit" value="提交" class="btn btn-default">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="footer-bottom_copy">Copyright &copy; 2017.Company name All rights reserved.</div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="footer-bottom_links">
+                            <a class="active" href="#">Home</a>
+                            <a href="#">Gallery</a>
+                            <a href="#">Blog</a>
+                            <a href="#">Reservation</a>
+                            <a href="#">Purchase</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /footer -->
+
+</body>
+</html>
+

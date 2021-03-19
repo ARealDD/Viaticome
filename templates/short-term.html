@@ -1,0 +1,252 @@
+﻿ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>寻找心仪的房源 · Viaticome</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+</head>
+<body>
+  <!-- main wrapper -->
+  <div class="wrapper">
+    <!-- header -->
+    <header class="header">
+      <div class="header-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+              <div class="header-location"><i class="fa fa-home"></i> <a href="#">455 Martinson, Los Angeles</a></div>
+              <div class="header-email"><i class="fa fa-envelope-o"></i> <a href="mailto:support@email.com">support@email.com</a></div>
+              <div class="header-phone"><i class="fa fa-phone"></i> <a href="#">8 (043) 567 - 89 - 30</a></div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+              <div class="header-social pull-right">
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-facebook"></i></a>
+                <a href="#"><i class="fa fa-google-plus"></i></a>
+                <a href="#"><i class="fa fa-dribbble"></i></a>
+                <a href="#"><i class="fa fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="header-bottom">
+        <nav class="navbar navbar-universal navbar-custom">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="logo"><a href="index.html" class="navbar-brand page-scroll"><img src="../static/images/logo/logo.png" alt="logo"></a></div>
+              </div>
+              <div class="col-lg-9">
+                <div class="navbar-header">
+                  <button type="button" data-toggle="collapse" data-target=".navbar-main-collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+                </div>
+                <div class="collapse navbar-collapse navbar-main-collapse">
+                  <ul class="nav navbar-nav navbar-right">
+                    <li><a href="index.html">主页</a></li>
+                    <li><a href="short-term.html">短租·民宿</a></li>
+                    <li><a href="rooms-detail.html">房间信息</a></li>
+                    <li><a href="contacts.html">联系方式</a></li>
+                    <li><a href="about-us.html">关于我们</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- /header -->
+    <!-- breadcrumbs -->
+    <section class="breadcrumbs" style="background-image: url(../static/images/breadcrumbs/best-room.jpg)">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h1 class="h1">短租 · 民宿</h1>
+          </div>
+          <div class="col-md-6">
+            <ol class="breadcrumb">
+              <li><a href="#">主页</a><i class="fa fa-angle-right"></i></li>
+              <li class="active">短租·民宿</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /breadcrumbs -->
+    <!-- chose best rooms -->
+    <section class="gallery best-room">
+      <div class="container">
+        <h2 class="h2">精选地区优质民宿</h2>
+            <ul class="portfolio-sorting">
+              <li><a href="#" data-group="all" class="active">全部</a></li>
+              <li><a href="#" data-group="single">单人</a></li>
+              <li><a href="#" data-group="double">双人</a></li>
+              <li><a href="#" data-group="quadra">四人</a></li>
+            </ul>
+
+<!--        data-groups需要渲染-->
+      <div class="container best-room-carousel">
+        <div id="grid" class="row best-room_ul best-rooms-isotope-page">
+          <div data-groups="[&quot;double&quot;]" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
+              <div class="best-room_img">
+                <a href="#"><img src="{{../static/images/best-rooms/1.jpg}}" alt=""></a>
+                <div class="best-room_overlay">
+                  <div class="overlay_icn"><a href="{{rooms_detail}}"></a></div>
+                </div>
+              </div>
+              <div class="best-room-info">
+                <div class="best-room_t"><a href="{{rooms_detail}}">{{ short_house_name }}</a></div>
+                <div class="best-room_desc">{{ short_house_description }}</div>
+                <div class="best-room_price">
+                  <span>¥{{ short_house_price }}</span> 每晚
+                </div>
+                <div class="best-room_footer">
+                  <div class="footer_el __bed"><i class="fa fa-bed"></i> {{num_of_bed}}</div>
+                  <div class="footer_el __ppl"><i class="fa fa-user"></i> {{num_of_user}}</div>
+                  <div class="footer_el __wifi">
+                    {% if Free_WiFi %}
+                      Free WiFi
+                    {% end if %}
+                  </div>
+                  <div class="footer_el __area">{{size_of_room}}</div>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+          </div>
+          <div data-groups="[&quot;double&quot;]" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
+            <div class="best-room_img">
+              <a href="#"><img src="{{../static/images/best-rooms/1.jpg}}" alt=""></a>
+              <div class="best-room_overlay">
+                <div class="overlay_icn"><a href="{{rooms_detail}}"></a></div>
+              </div>
+            </div>
+            <div class="best-room-info">
+              <div class="best-room_t"><a href="{{rooms_detail}}">{{ short_house_name }}</a></div>
+              <div class="best-room_desc">{{ short_house_description }}</div>
+              <div class="best-room_price">
+                <span>¥{{ short_house_price }}</span> 每晚
+              </div>
+              <div class="best-room_footer">
+                <div class="footer_el __bed"><i class="fa fa-bed"></i> {{num_of_bed}}</div>
+                <div class="footer_el __ppl"><i class="fa fa-user"></i> {{num_of_user}}</div>
+                <div class="footer_el __wifi">
+                  {% if Free_WiFi %}
+                  Free WiFi
+                  {% end if %}
+                </div>
+                <div class="footer_el __area">{{size_of_room}}</div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <div data-groups="[&quot;single&quot;]" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 best-room_li">
+            <div class="best-room_img">
+              <a href="#"><img src="{{../static/images/best-rooms/1.jpg}}" alt=""></a>
+              <div class="best-room_overlay">
+                <div class="overlay_icn"><a href="{{rooms_detail}}"></a></div>
+              </div>
+            </div>
+            <div class="best-room-info">
+              <div class="best-room_t"><a href="{{rooms_detail}}">{{ short_house_name }}</a></div>
+              <div class="best-room_desc">{{ short_house_description }}</div>
+              <div class="best-room_price">
+                <span>¥{{ short_house_price }}</span> 每晚
+              </div>
+              <div class="best-room_footer">
+                <div class="footer_el __bed"><i class="fa fa-bed"></i> {{num_of_bed}}</div>
+                <div class="footer_el __ppl"><i class="fa fa-user"></i> {{num_of_user}}</div>
+                <div class="footer_el __wifi">
+                  {% if Free_WiFi %}
+                  Free WiFi
+                  {% end if %}
+                </div>
+                <div class="footer_el __area">{{size_of_room}}</div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>v
+
+
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- /choose best rooms -->
+  <!-- footer -->
+    <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="footer-top_logo"><a href="index.html"><img src="../static/images/logo/logo.png" alt="Footer logo"></a></div>
+            <div class="footer-top_txt">
+              <p>度假屋，民宿，长期租房，Viaticome为您精心挑选。</p>
+              <p>为所有房东和房客建立一个具有包容性的平台是我们最大的目标，我们一直在努力做得更好。</p></div>
+            <div class="footer-top_address">
+                <div><i class="fa fa-phone"></i> Phone: <span>8 (043) 567 - 89 - 30</span></div>
+                <div><i class="fa fa-envelope-o"></i> E-mail: <span><a href="mailto:support@email.com">support@email.com</a></span></div>
+                <div><i class="fa fa-home"></i> Location: <span>455 Martinson, Los Angeles</span></div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 marg-sm-50 col-xs-12">
+            <div class="footer-top_contact_form">
+              <div class="contact_form_t">有任何意见与建议，请联系我们：</div>
+                  <form action="mail.php" method="POST" class="row form-horizontal form-wizzard">
+                    {%csrf_token%]
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" name="name" class="form-control" placeholder="您的姓/名">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <input type="email" name="email" class="form-control" placeholder="您的邮箱">
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      <textarea rows="6" name="message" class="form-control" placeholder="您的意见与建议"></textarea>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                      <input type="submit" value="提交" class="btn btn-default">
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="footer-bottom_copy">Copyright &copy; 2019.Company name All rights reserved.</div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="footer-bottom_links">
+                <a class="active" href="{{index.html}}">Home</a>
+                <a href="{{short-term.html}}">Rooms</a>
+                <a href="{{about-us.html}}">About us</a>
+                <a href="{{contacts.html}}">Contacts</a>
+                <a href="#">Purchase</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </footer>
+</div>
+  <!-- /footer -->
+  <!-- Scripts -->
+  <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+  <script type="text/javascript" src="../static/js/tether.min.js"></script>
+  <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../static/js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="../static/js/moment.min.js"></script>
+  <script type="text/javascript" src="../static/js/jquery.smartmenus.js"></script>
+  <script type="text/javascript" src="../static/js/jquery.parallax.min.js"></script>
+  <script type="text/javascript" src="../static/js/jquery.shuffle.min.js"></script>
+  <script type="text/javascript" src="../static/js/owl.carousel.min.js"></script>
+  <script type="text/javascript" src="../static/js/main.js"></script>
+  <!-- /Scripts -->
+</body>
+</html>
